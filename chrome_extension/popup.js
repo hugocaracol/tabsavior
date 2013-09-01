@@ -5,7 +5,17 @@ var tabSaviour = {
     loadAction: function(){
         document.getElementById('message').innerHTML = "Loading tab info...";
         chrome.storage.local.get('tabs', function (result) {
+            /* Error handling */
+            var lastError = chrome.runtime.lastError;
+            if (lastError){
+                document.getElementById('message').innerHTML = lastError;
+                return;
+            }
             tabs = result.tabs;
+            if (!tabs){
+                document.getElementById('message').innerHTML = "Nothing to load.";
+                return;
+            }
             var tabs_array = tabs.split(",");
             for(i=0; i<tabs_array.length; i++){
                 var createProperties = {
